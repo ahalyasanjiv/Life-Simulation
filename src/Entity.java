@@ -1,7 +1,7 @@
 /**
  * Created by ahalyasanjiv on 5/16/17.
  */
-public class Entity {
+public abstract class Entity {
     private final int id;
     private int x;
     private int y;
@@ -53,8 +53,8 @@ public class Entity {
     public boolean getStatus(){
         return isAlive;
     }
-    public void setStatus(boolean a){
-        isAlive = a;
-    }
+    public void setStatus(boolean status){ isAlive = status; }
+
+    abstract public void update();
 }
 

@@ -3,31 +3,45 @@
  */
 import java.util.Random;
 public abstract class Animal extends Entity {
-    private final int COOLDOWN; //cycle COOLDOWN before next movement
-    private final int ENERGY_COST; //energy lost per cycle
+    private int cooldown; // number of cycles before next movement
+    private final int ENERGY_COST; // energy lost per cycle
     private int energy;
-    private final int MAX_ENERGY; //Animal will not eat when this is reached BUT animal's energy can exceed MAX_ENERGY
-    private final int MIN_ENERGY; //Animal will die when reaching this energy
-    private final int BIRTH_AGE; //age at which animal can give birth
-    private final int BIRTH_ENERGY; //minimum energy at which animal can give birth
+    private final int MAX_ENERGY; // Animal will not eat when this is reached BUT animal's energy can exceed MAX_ENERGY
+    private final int MIN_ENERGY; // Animal will die when reaching this energy
+    private final int BIRTH_AGE; // age at which animal can give birth
+    private final int BIRTH_ENERGY; // minimum energy at which animal can give birth
 
-    public Animal(int ID, int X, int Y, int MaxAge, int Cooldown, Earth home){
-        super(ID, X, Y, MaxAge,home);
+    public Animal(int ID, int X, int Y, int maxAge, int cooldown, int maxEnergy, int birthAge, int birthEnergy, Earth home){
+        super(ID, X, Y, maxAge,home);
         Random rand = new Random();
-        ENERGY_COST = 1; //animals lose 1 energy per cycle
-        energy = rand.nextInt(8) + 3; //3 thru 10
-        MAX_ENERGY =  rand.nextInt(11) + 10; //10 thru 20
+        ENERGY_COST = 1; // animals lose 1 energy per cycle
+        energy = rand.nextInt(8) + 3;
+        MAX_ENERGY =  maxEnergy;
         MIN_ENERGY = 0;
-        BIRTH_AGE = rand.nextInt(3) + 3; //3 thru 5
-        BIRTH_ENERGY = 5;
-        COOLDOWN = Cooldown;
+        BIRTH_AGE = birthAge;
+        BIRTH_ENERGY = birthEnergy;
+        this.cooldown = cooldown;
 
     }
 
+
+    /** Animal gives birth to a new animal of the same species.
+     * The new animal will be in the immediate surrounding area of the animal that gave birth. */
+    public abstract void giveBirth();
+
+    /** Animal eats food in its immediate radius (one space away from its initial location).
+     * Once the animal eats, it has moved on the grid to the food's location and the food is no longer on the grid.*/
+    public abstract void eatFood();
+
+    /** Moves animals to an empty spot in its immediate radius that has food close by (if there is one)
+     * NOTE: Animal will not have eaten after this method is executed, but it will be closer to its food. */
+    public abstract void moveTowardsFood();
+
+    /** Moves animal to an empty spot in its immediate surrounding area.*/
     public void move(){
         if (home.isSpaceAvailable(this)) {
             int[] newLoc;
-            int[][] surrounding = home.getSurroundCoords(this);
+            int[][] surrounding = home.getImmediateCoordinates(this);
             boolean foundNewSpot = false;
             // Keep looking at random locations surrounding animal until place to move to is found
             while (!foundNewSpot) {
@@ -37,75 +51,12 @@ public abstract class Animal extends Entity {
                 if (home.isValidCoordinate(newLoc[0],newLoc[1])){
                     if(home.isEmpty(newLoc[0],newLoc[1])) {
                         home.moveEntity(this, newLoc[0], newLoc[1]);
-                        decreaseEnergy(1);
+                        decreaseEnergy(getEnergyCost());
                         foundNewSpot = true;
                     }
                 }
             }
         }
-    }
-
-    public void update() {
-        increaseAge();
-        double randomDecimal = Math.random();
-        double decimalBoundary;
-        if (this instanceof Carnivore)
-            decimalBoundary = 0.1;
-        else
-            decimalBoundary = 0.2;
-        if ((getAge() > getMaxAge() || getEnergy() < getMinEnergy()) && randomDecimal < decimalBoundary)
-            home.removeEntity(this);
-        else if (getAge()>getBirthAge() && getEnergy()>getBirthEnergy() && randomDecimal > 0.5 && home.isSpaceAvailable(this))
-            giveBirth();
-        else if (getEnergy()<getMaxEnergy() && home.isFoodAvailable(this)&&(getAge() % getCooldown() == 0))
-            lookForFood();
-        else if (home.isSpaceAvailable(this) && (getAge() % getCooldown() == 0))
-            move();
-        else
-            decreaseEnergy(1);
-    }
-
-    public abstract void giveBirth();
-
-    public boolean lookForFood(){
-        if (home.isFoodAvailable(this)) {
-            int[] newLoc;
-            int[][] surrounding = home.get2RadiusCoords(this);
-            boolean foundFood = false;
-            // Keep looking at random locations surrounding animal until place to move to is found
-            while (!foundFood) {
-
-                Random rand = new Random();
-                int randLoc = rand.nextInt(24);
-                newLoc = surrounding[randLoc];
-                if (home.isValidCoordinate(newLoc[0],newLoc[1])) {
-                    if (((this instanceof Carnivore) && home.isHerbivore(newLoc[0],newLoc[1])) || ((this instanceof Herbivore) && home.isPlant(newLoc[0],newLoc[1]))) {
-                        if (randLoc < 8) { //if the location is within the inner surrounding coordinates, eat the food
-                            home.removeEntity(home.getEntity(newLoc[0], newLoc[1]));
-                            home.moveEntity(this, newLoc[0], newLoc[1]);
-                            increaseEnergy(3);
-                            foundFood = true;
-                        } else { //else the food is on the outer coordinates; move towards the food but don't eat it because the food is too far
-                            int x = newLoc[0];
-                            int y = newLoc[1];
-
-                            if (x < this.getX()){x++;} //if food is two spaces left of the animal
-                            else if(x > this.getX()) x--; //else if the food is two spaces to the right
-
-                            if (y < this.getY() ){y++;}
-                            else if (y > this.getY()) y--;
-
-                            if (home.isEmpty(x,y)) {home.moveEntity(this, x, y);}
-                            else move(); //move normally if animal cannot move towards food
-                            foundFood = true;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-        else
-            return false;
     }
 
     public void decreaseEnergy(int amount){energy -= amount;}
@@ -116,6 +67,52 @@ public abstract class Animal extends Entity {
     public int getMinEnergy(){return MIN_ENERGY;}
     public int getBirthAge(){return BIRTH_AGE;}
     public int getBirthEnergy(){return BIRTH_ENERGY;}
-    public int getCooldown(){return COOLDOWN;}
+    public int getCooldown(){return cooldown;}
+    public void setCooldown(int cooldown){this.cooldown = cooldown;}
+
+
+     /*
+    @Override
+    public void lookForFood(){
+        int[] newLoc;
+        int[][] surrounding = home.getSurroundCoords(this);
+        boolean foundFood = false;
+        // Keep looking at random locations surrounding animal until place to move to is found
+
+        while (!foundFood) {
+
+            Random rand = new Random();
+            int randLoc = rand.nextInt(8);
+            newLoc = surrounding[randLoc];
+            if (home.isValidCoordinate(newLoc[0],newLoc[1])) {
+                if (home.isPlant(newLoc[0],newLoc[1])) {
+                    //if (randLoc < 8) { //if the location is within the inner surrounding coordinates, eat the food
+                        home.removeEntity(home.getEntity(newLoc[0], newLoc[1]));
+                        home.moveEntity(this, newLoc[0], newLoc[1]);
+                        increaseEnergy(3);
+                        foundFood = true;
+                    //}
+
+                    else { //else the food is on the outer coordinates; move towards the food but don't eat it because the food is too far
+                        int x = newLoc[0];
+                        int y = newLoc[1];
+
+                        if (x < this.getX()){x++;} //if food is two spaces left of the animal
+                        else if(x > this.getX()) x--; //else if the food is two spaces to the right
+
+                        if (y < this.getY() ){y++;}
+                        else if (y > this.getY()) y--;
+
+                        if (home.isEmpty(x,y)) {home.moveEntity(this, x, y);}
+                        else move(); //move normally if animal cannot move towards food
+                        foundFood = true;
+                    }
+
+                }
+            }
+        }
+    }
+    */
+
 
 }

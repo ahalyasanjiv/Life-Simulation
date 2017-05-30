@@ -7,6 +7,8 @@ public class Plant extends Entity {
     public Plant(int ID, int X, int Y, Earth home){
         super(ID, X, Y, randPlantMaxAge(), home);
     }
+
+    @Override
     public void update() {
         increaseAge();
         if (getAge() > getMaxAge())

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Earth {
-    //
+    // Grid will hold each entity currently on the earth
     private Entity[][] grid;
 
     // ArrayLists to hold each entity currently on the grid
@@ -54,14 +54,14 @@ public class Earth {
                 if (randomDecimal < 0.07) {
                     incrementCarnivoreCount();
                     int newID = getCarnivoreCount();
-                    Carnivore newCarnivore = new Carnivore(newID, j,i, Carnivore.randCooldown(), this);
+                    Carnivore newCarnivore = new Carnivore(newID, j,i, this);
                     addEntity(newCarnivore);
                     changeCarnivorePopulation(1);
                 }
                 else if (randomDecimal < 0.18) {
                     incrementHerbivoreCount();
-                    int newID = getPlantCount();
-                    Herbivore newHerbivore = new Herbivore(newID, j,i, Herbivore.randCooldown(), this);
+                    int newID = getHerbivoreCount();
+                    Herbivore newHerbivore = new Herbivore(newID, j,i, this);
                     addEntity(newHerbivore);
                     changeHerbivorePopulation(1);
                 }
@@ -112,7 +112,7 @@ public class Earth {
                 double randomDecimal = Math.random();
                 // plant new plants
                 if (isEmpty(j,i)) {
-                    if(randomDecimal > 0.90) {
+                    if(randomDecimal > 0.95) {
                         incrementPlantCount();
                         int newID = getPlantCount();
                         Plant newPlant = new Plant(newID, j,i, this);
@@ -126,11 +126,11 @@ public class Earth {
         timePassedSincePlantCycle = 0;
         // set the new plant cycle to a random number between 3 and 5 (inclusive)
         Random rn = new Random();
-        int randomNum =  rn.nextInt(4-2+1) + 2;
+        int randomNum =  rn.nextInt(3) + 2;
         nextPlantCycle = randomNum;
     }
 
-    public int[][] getSurroundCoords(Entity n){
+    public int[][] getImmediateCoordinates(Entity n){
         /* the coordinates return in the following pattern:
             0 1 2
             7 n 3
@@ -145,6 +145,52 @@ public class Earth {
         return surrounding;
     }
 
+    public int[][] getImmediateCoordinates(int x, int y){
+        /* the coordinates return in the following pattern:
+            0 1 2
+            7 n 3
+            6 5 4
+         */
+
+        int[][] surrounding = {{x-1, y-1},
+                {x,y-1}, {x+1,y-1},{x+1,y}, {x+1,y+1}, {x,y+1},{x-1,y+1},{x-1,y}};
+
+        return surrounding;
+    }
+
+    public int[][] getExtendedCoordinates(Entity n){
+        /* the coordinates return in the following pattern:
+             8  9 10 11 12
+            23  0  1  2 13
+            22  7  n  3 14
+            21  6  5  4 15
+            20 19 18 17 16
+         */
+        int x = n.getX();
+        int y = n.getY();
+        int[][] surrounding = {{x-1, y-1},
+                {x,y-1}, {x+1,y-1},{x+1,y}, {x+1,y+1}, {x,y+1},{x-1,y+1},{x-1,y},
+                {x-2,y-2}, //8
+                {x-1, y-2}, //9
+                {x, y-2}, //10
+                {x+1, y-2}, //11
+                {x+2, y-2}, //12
+                {x+2, y-1},
+                {x+2, y},
+                {x+2, y+1},
+                {x+2, y+2},
+                {x+1, y+2},
+                {x, y+2},
+                {x-1, y+2},
+                {x-2, y+2},
+                {x-2, y+1},
+                {x-2, y},
+                {x-2, y-1}
+        };
+        return surrounding;
+    }
+
+    /*
     public int[][] get2RadiusCoords(Entity n){
         /* the coordinates return in the following pattern:
              8  9 10 11 12
@@ -153,7 +199,7 @@ public class Earth {
             21  6  5  4 15
             20 19 18 17 16
          */
-
+        /*
         int x = n.getX();
         int y = n.getY();
         int[][] surrounding = {{x-1, y-1},
@@ -178,6 +224,7 @@ public class Earth {
 
         return surrounding;
     }
+    */
 
     protected void addEntity(Carnivore n){
         int X = n.getX();
@@ -227,7 +274,6 @@ public class Earth {
     }
 
     protected void moveEntity(Entity entity, int X, int Y){
-
         if (isValidCoordinate(X,Y)) {
             grid[entity.getY()][entity.getX()] = null;
             entity.changeLocation(X, Y);
@@ -237,7 +283,6 @@ public class Earth {
 
     protected void removeEntity(Entity entity){
         grid[entity.getY()][entity.getX()] = null;
-        entity.changeLocation(1,1);
         entity.setStatus(false);
         if (entity instanceof Plant)
             plantList.remove(entity);
@@ -327,7 +372,7 @@ public class Earth {
 
     public boolean isSpaceAvailable(Entity entity){
         //checks whether there is empty space around the entity
-        int[][] surrounding = getSurroundCoords(entity);
+        int[][] surrounding = getImmediateCoordinates(entity);
         for (int[] row: surrounding){
             if (isValidCoordinate(row[0],row[1])){
                 if (isEmpty(row[0],row[1])){
@@ -337,20 +382,50 @@ public class Earth {
         } return false;
     }
 
-    // checks if there is space available in the entire grid
-    public boolean isSpaceAvailable(){
-        for(Entity[] row: grid){
-            for(Entity col: row){
-                if (col == null) return true;
+    // Checks if food is available within one space of a given animal
+    public boolean isFoodInImmediateRadius(Animal animal) {
+        int[][] surrounding = getImmediateCoordinates(animal);
+        for (int[] row: surrounding){
+            if (isValidCoordinate(row[0],row[1])){
+                if (animal instanceof Herbivore && getEntity(row[0],row[1]) instanceof Plant)
+                    return true;
+                else if (animal instanceof Carnivore && getEntity(row[0],row[1]) instanceof Herbivore)
+                    return true;
             }
         }
         return false;
     }
 
-    // checks if food is available surrounding a specified animal
-    public boolean isFoodAvailable(Animal animal){
+    public boolean isFoodInImmediateRadius(int x, int y, int animalType) {
+        int[][] surrounding = getImmediateCoordinates(x,y);
+        for (int[] row: surrounding){
+            if (isValidCoordinate(row[0],row[1])){
+                if (animalType == 1 && getEntity(row[0],row[1]) instanceof Plant)
+                    return true;
+                else if (animalType == 2 && getEntity(row[0],row[1]) instanceof Herbivore)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public int[] findFoodInImmediateRadius(Animal animal) {
+        int[][] surrounding = getImmediateCoordinates(animal);
+        for (int[] row: surrounding){
+            if (isValidCoordinate(row[0],row[1])){
+                if (animal instanceof Herbivore && getEntity(row[0],row[1]) instanceof Plant)
+                    return row;
+                else if (animal instanceof Carnivore && getEntity(row[0],row[1]) instanceof Herbivore)
+                    return row;
+            }
+        }
+        return null;
+    }
+
+    // Checks if food is available within two spaces of a given animal
+    public boolean isFoodInOuterRadius(Animal animal){
         //checks whether there is food space around carnivore
-        int[][] surrounding = get2RadiusCoords(animal);
+        int[][] surrounding = getExtendedCoordinates(animal);
         for (int[] row: surrounding){
             if (isValidCoordinate(row[0],row[1])){
                 if (animal instanceof Herbivore && getEntity(row[0],row[1]) instanceof Plant)
