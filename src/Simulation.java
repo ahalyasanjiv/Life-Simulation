@@ -78,7 +78,8 @@ public class Simulation {
 //            System.out.println(grid);
 //        }
         LifeFrame textFieldFrame = new LifeFrame();
-        textFieldFrame.setSize(350, 350);
+        textFieldFrame.setSize(300, 350);
+        textFieldFrame.setResizable(false);
         textFieldFrame.setLocationRelativeTo(null);
         textFieldFrame.setVisible(true);
     }

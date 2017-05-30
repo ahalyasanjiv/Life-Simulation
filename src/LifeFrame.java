@@ -17,13 +17,11 @@ public class LifeFrame extends JFrame{
     private final JTextField colField;
     private final JTextField iterationField;
     private final JButton submitButton;
-    private final BorderLayout inputLayout;
     private final JPanel textFields;
 
     public LifeFrame(){
         super("Life Simulation");
 
-        inputLayout = new BorderLayout(5,5);
         textFields = new JPanel();
         textFields.setLayout(new GridLayout(6, 1));
 
@@ -39,9 +37,15 @@ public class LifeFrame extends JFrame{
         textFields.add(new JLabel("Enter number of iterations:"));
         textFields.add(iterationField);
 
-        add(textFields,BorderLayout.NORTH);
-        submitButton = new JButton("OK");
+        JLabel cautionLabel = new JLabel();
+        cautionLabel.setText("<html> <center><p style=\"font-size:16px\"><b>WELCOME TO LIFE SIMULATION!!! </b></p>" +
+                "* is a plant, & is a herbivore, @ is a carnivore, and # is a rock. <br>"+
+                "<p style=\"font-size:8px\"><i>CAUTION: Choosing dimensions too big may cause the grid to be cut off</i></p><center></html>");
+
+        add(textFields,BorderLayout.CENTER);
+        submitButton = new JButton("I'm ready to ROLL");
         add(submitButton,BorderLayout.SOUTH);
+        add(cautionLabel, BorderLayout.NORTH);
 
         //Event Handlers
         ButtonHandler handler = new ButtonHandler();
@@ -66,7 +70,7 @@ public class LifeFrame extends JFrame{
 
                 // System.out.print(row);
                 SimulationGrid window = new SimulationGrid(row,col,iterations);
-                window.setSize(row*50, col*50);
+                window.setSize(col*60, row*60);
                 window.setResizable(false);
                 window.setLocationRelativeTo(null);
                 window.setVisible(true);
