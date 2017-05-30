@@ -190,42 +190,6 @@ public class Earth {
         return surrounding;
     }
 
-    /*
-    public int[][] get2RadiusCoords(Entity n){
-        /* the coordinates return in the following pattern:
-             8  9 10 11 12
-            23  0  1  2 13
-            22  7  n  3 14
-            21  6  5  4 15
-            20 19 18 17 16
-         */
-        /*
-        int x = n.getX();
-        int y = n.getY();
-        int[][] surrounding = {{x-1, y-1},
-                {x,y-1}, {x+1,y-1},{x+1,y}, {x+1,y+1}, {x,y+1},{x-1,y+1},{x-1,y},
-                {x-2,y-2}, //8
-                {x-1, y-2}, //9
-                {x, y-2}, //10
-                {x+1, y-2}, //11
-                {x+2, y-2}, //12
-                {x+2, y-1},
-                {x+2, y},
-                {x+2, y+1},
-                {x+2, y+2},
-                {x+1, y+2},
-                {x, y+2},
-                {x-1, y+2},
-                {x-2, y+2},
-                {x-2, y+1},
-                {x-2, y},
-                {x-2, y-1}
-        };
-
-        return surrounding;
-    }
-    */
-
     protected void addEntity(Carnivore n){
         int X = n.getX();
         int Y = n.getY();
