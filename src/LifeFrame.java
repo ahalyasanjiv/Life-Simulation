@@ -90,7 +90,7 @@ public class LifeFrame extends JFrame{
 
             // Catch general input that is not convertible to integer
             catch (NumberFormatException exception){
-                JOptionPane.showMessageDialog(null, "Input must be a number greater than 0. Try again.");
+                JOptionPane.showMessageDialog(null, "Input must be an integer greater than 0. Try again.");
             }
 
         }

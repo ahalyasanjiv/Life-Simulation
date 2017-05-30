@@ -41,9 +41,9 @@ public class Carnivore extends Animal {
         double randomDecimal = Math.random();
         if ((getAge() > getMaxAge() || getEnergy() < getMinEnergy()) && randomDecimal < 0.05)
             home.removeEntity(this);
-        else if (getAge()>getBirthAge() && getEnergy()>getBirthEnergy() && home.isSpaceAvailable(this) && getNumberOfBirths()<4)
+        else if (getAge()>getBirthAge() && getEnergy()>getBirthEnergy() && home.isSpaceAvailable(this) && getNumberOfBirths()<5)
             giveBirth();
-        else if (getEnergy()<getMaxEnergy() && home.isFoodInImmediateRadius(this) && (getAge() % getCooldown() == 0) && randomDecimal < 0.51) {
+        else if (getEnergy()<getMaxEnergy() && home.isFoodInImmediateRadius(this) && (getAge() % getCooldown() == 0) && randomDecimal < 0.38) {
             eatFood();
             resetCooldown();
         }
