@@ -4,6 +4,8 @@
  */
 
 import java.util.*;
+import javax.swing.JFrame;
+
 public class Simulation {
     public static void main(String[] args) {
 //        // Get dimensions of grid from user
@@ -78,9 +80,10 @@ public class Simulation {
 //            System.out.println(grid);
 //        }
         LifeFrame textFieldFrame = new LifeFrame();
-        textFieldFrame.setSize(300, 350);
+        textFieldFrame.setSize(300, 400);
         textFieldFrame.setResizable(false);
         textFieldFrame.setLocationRelativeTo(null);
+        textFieldFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         textFieldFrame.setVisible(true);
     }
 }

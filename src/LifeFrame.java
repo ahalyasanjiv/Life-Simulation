@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JComboBox;
 
 public class LifeFrame extends JFrame{
     private final JTextField rowField;
@@ -18,12 +19,16 @@ public class LifeFrame extends JFrame{
     private final JTextField iterationField;
     private final JButton submitButton;
     private final JPanel textFields;
+    private final JComboBox<String> outputList;
+    private final String[] outputOptions = {"Display in new window and terminal",
+            "Display in new window only", "Display in terminal only"};
 
     public LifeFrame(){
         super("Life Simulation");
 
+        //USER INPUT TEXT FIELDS
         textFields = new JPanel();
-        textFields.setLayout(new GridLayout(6, 1));
+        textFields.setLayout(new GridLayout(8, 1));
 
         rowField = new JTextField();
         textFields.add(new JLabel("Enter number of rows:"));
@@ -37,12 +42,24 @@ public class LifeFrame extends JFrame{
         textFields.add(new JLabel("Enter number of iterations:"));
         textFields.add(iterationField);
 
+        //JLIST FOR STYLE OF OUTPUTTING THE SIMULATION
+        outputList = new JComboBox<>(outputOptions);
+        outputList.setSelectedIndex(0);
+        textFields.add(outputList);
+
+        JLabel checkBoxWarning = new JLabel("<html><p style=\"font-size:8px\">" +
+                "**Large number of rows, columns, or iterations should only be printed to terminal." +
+                "</p></html>");
+        textFields.add(checkBoxWarning);
+
+        //LABEL THAT GOES AT TOP OF JFRAME
         JLabel cautionLabel = new JLabel();
         cautionLabel.setText("<html> <center><p style=\"font-size:16px\"><b>WELCOME TO LIFE SIMULATION!!! </b></p>" +
                 "* is a plant, & is a herbivore, @ is a carnivore, and # is a rock. <br>"+
-                "<p style=\"font-size:8px\"><i>CAUTION: Choosing dimensions too big may cause the grid to be cut off</i></p><center></html>");
+                "<p style=\"font-size:8px\"><i>CAUTION: Choosing dimensions too big may cause the grid to be cut off.</i></p><center></html>");
         //cautionLabel.setFont(new Font("Comic Sans MS", Font.PLAIN,12));
 
+        //ADDING EVERYTHING TO THE JFRAME
         add(textFields,BorderLayout.CENTER);
         submitButton = new JButton("I'm ready to ROLL");
         add(submitButton,BorderLayout.SOUTH);
@@ -69,9 +86,15 @@ public class LifeFrame extends JFrame{
                 int iterations = Integer.parseInt(iterationField.getText());
                 if (iterations <= 0) {throw new IterationException();}
 
-                // System.out.print(row);
-                SimulationGrid window = new SimulationGrid(row,col,iterations);
-                window.setSize(col*60, row*60);
+                int outputSel = outputList.getSelectedIndex();
+
+                //System.out.print(outputSel);
+                SimulationGrid window = new SimulationGrid(row,col,iterations, outputSel);
+                if (outputSel !=2) { //if only terminal output
+                    window.setSize(col * 60, row * 60);
+                } else {
+                    window.setSize(300,100);
+                }
                 window.setResizable(false);
                 window.setLocationRelativeTo(null);
                 window.setVisible(true);

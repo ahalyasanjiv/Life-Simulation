@@ -24,21 +24,28 @@ public class SimulationGrid extends JFrame{
     private int rows;
     private int cols;
     private int iterations;
+    private int outputStyle;
 
-    public SimulationGrid(int rows, int cols, int iterations){
+    public SimulationGrid(int rows, int cols, int iterations, int outputStyle){
         super("Life Simulation");
 
         this.rows = rows;
         this.cols = cols;
         this.iterations = iterations;
+        this.outputStyle = outputStyle;
 
         earth = new Earth(rows, cols);
         turn = new JLabel();
-        add(turn, BorderLayout.NORTH);
 
         updateGrid();
 
-        turn.setText("Turn " + Integer.toString(turnNum));
+        if (outputStyle != 2) {
+            turn.setText("Turn " + Integer.toString(turnNum));
+            add(turn, BorderLayout.NORTH);
+        } else {
+            turn.setText("Please check the terminal...");
+            add(turn, BorderLayout.CENTER);
+        }
 
         timer.setRepeats(true);
         timer.start();
@@ -46,59 +53,79 @@ public class SimulationGrid extends JFrame{
     }
 
     private void updateGrid(){
-        grid = new JPanel();
-        grid.setLayout(new GridLayout(rows,cols,0,0));
         Entity[][] currentGrid = earth.getGrid();
 
-        int fontSize =  Math.min(rows,cols) * 50 /30;
-        if (fontSize < 16) {fontSize = 16;}
+        if (outputStyle == 0  || outputStyle == 2) {
+            System.out.println("Turn " + Integer.toString(turnNum));
+            System.out.println(earth);
+        }
 
-        for (Entity[] row : currentGrid){
-            for(Entity entity: row){
-                if (entity instanceof Carnivore){
-                    JLabel newLabel = new JLabel();
-                    newLabel.setText("@");
-                    newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                    grid.add(newLabel);
-                } else if (entity instanceof Herbivore){
-                    JLabel newLabel = new JLabel();
-                    newLabel.setText("&");
-                    newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                    grid.add(newLabel);
-                } else if (entity instanceof Plant){
-                    JLabel newLabel = new JLabel();
-                    newLabel.setText("*");
-                    newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                    grid.add(newLabel);
-                } else if (entity instanceof Rock){
-                    JLabel newLabel = new JLabel();
-                    newLabel.setText("#");
-                    newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                    grid.add(newLabel);
-                } else if (entity == null){
-                    JLabel newLabel = new JLabel();
-                    newLabel.setText(".");
-                    newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                    grid.add(newLabel);
+        if (outputStyle == 0 || outputStyle == 1) {
+            grid = new JPanel();
+            grid.setLayout(new GridLayout(rows, cols, 0, 0));
+
+            int fontSize = Math.min(rows, cols) * 50 / 30;
+            if (fontSize < 16) {
+                fontSize = 16;
+            }
+
+            for (Entity[] row : currentGrid) {
+                for (Entity entity : row) {
+                    if (entity instanceof Carnivore) {
+                        JLabel newLabel = new JLabel();
+                        newLabel.setText("@");
+                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                        grid.add(newLabel);
+                    } else if (entity instanceof Herbivore) {
+                        JLabel newLabel = new JLabel();
+                        newLabel.setText("&");
+                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                        grid.add(newLabel);
+                    } else if (entity instanceof Plant) {
+                        JLabel newLabel = new JLabel();
+                        newLabel.setText("*");
+                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                        grid.add(newLabel);
+                    } else if (entity instanceof Rock) {
+                        JLabel newLabel = new JLabel();
+                        newLabel.setText("#");
+                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                        grid.add(newLabel);
+                    } else if (entity == null) {
+                        JLabel newLabel = new JLabel();
+                        newLabel.setText(".");
+                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                        grid.add(newLabel);
+                    }
                 }
             }
+            add(grid, BorderLayout.CENTER);
         }
-        add(grid, BorderLayout.CENTER);
     }
 
     private class Updater implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent event) {
             turnNum++;
-            turn.setText("Turn "+  Integer.toString(turnNum));
             earth.clockCycle();
+
+            if (outputStyle != 2) {
+                turn.setText("Turn "+  Integer.toString(turnNum));
+                remove(grid);
+            }
+
             updateGrid();
-            System.out.println(earth);
-            turn.repaint();
-            grid.repaint();
+
+            if (outputStyle !=2) {
+                turn.repaint();
+                grid.repaint();
+            }
 
             if (turnNum == iterations){
                 timer.stop();
+                if (outputStyle == 2 ) {
+                    turn.setText("Simulation finished in the terminal!");
+                }
             }
         }
     }
