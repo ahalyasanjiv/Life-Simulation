@@ -13,6 +13,7 @@ public class Earth {
     private ArrayList<Carnivore> carnivoreList;
     private ArrayList<Herbivore> herbivoreList;
     private ArrayList<Plant> plantList;
+    private ArrayList<Rock> rockList;
 
     // Number of rows and columns on the grid
     private int rows;
@@ -26,6 +27,7 @@ public class Earth {
     private int plantCount = 0;
     private int herbivoreCount = 0;
     private int carnivoreCount = 0;
+    private int rockCount = 0;
 
     // Number of organisms of each type currently on grid
     private int plantPop = 0;
@@ -41,6 +43,7 @@ public class Earth {
         carnivoreList = new ArrayList<Carnivore>();
         herbivoreList = new ArrayList<Herbivore>();
         plantList = new ArrayList<Plant>();
+        rockList = new ArrayList<Rock>();
 
         // set plant cycle
         Random rn = new Random();
@@ -71,6 +74,12 @@ public class Earth {
                     Plant newPlant = new Plant(newID, j,i, this);
                     addEntity(newPlant);
                     changePlantPopulation(1);
+                }
+                else if (randomDecimal < 0.48){
+                    incrementRockCount();
+                    int newID = getRockCount();
+                    Rock newRock = new Rock(newID, j, i, this);
+                    addEntity(newRock);
                 }
 
             }
@@ -229,6 +238,19 @@ public class Earth {
         }
     }
 
+    protected void addEntity(Rock n){
+        int X = n.getX();
+        int Y = n.getY();
+
+        if (isEmpty(X,Y)) {
+            grid[Y][X] = n; //grid[row][col]
+            rockList.add(n);
+        }
+        else{
+            System.out.printf("rock: location %d,%d is not empty%n", X, Y);
+        }
+    }
+
     public boolean isHerbivore(int X, int Y) {
         return (grid[Y][X] instanceof Herbivore);
     }
@@ -280,7 +302,10 @@ public class Earth {
             return "&";
         } else if(n instanceof Plant) {
             return "*";
-        } else return ".";
+        } else if (n instanceof Rock) {
+            return "#";
+        }
+        else return ".";
     }
 
     // Method that prints out grid
@@ -323,11 +348,13 @@ public class Earth {
     public void incrementPlantCount(){ plantCount++; }
     public void incrementHerbivoreCount(){ herbivoreCount++; }
     public void incrementCarnivoreCount(){ carnivoreCount++; }
+    public void incrementRockCount(){rockCount++;}
 
     // get methods for organism counts
     public int getPlantCount(){ return plantCount; }
     public int getHerbivoreCount() { return herbivoreCount; }
     public int getCarnivoreCount() { return carnivoreCount; }
+    public int getRockCount(){return rockCount;}
 
     // Get methods for entity lists
     public ArrayList<Carnivore> getCarnivoreList(){return carnivoreList;}
