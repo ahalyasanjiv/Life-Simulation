@@ -12,7 +12,8 @@ public class Earth {
     // ArrayLists to hold each entity currently on the grid
     private ArrayList<Carnivore> carnivoreList;
     private ArrayList<Herbivore> herbivoreList;
-    private ArrayList<Plant> plantList;
+    private ArrayList<Bush> bushList;
+    private ArrayList<Grass> grassList;
     private ArrayList<Rock> rockList;
 
     // Number of rows and columns on the grid
@@ -24,13 +25,15 @@ public class Earth {
     private int timePassedSincePlantCycle;
 
     // Number of organisms of each type that has been created thus far
-    private int plantCount = 0;
+    private int bushCount = 0;
+    private int grassCount = 0;
     private int herbivoreCount = 0;
     private int carnivoreCount = 0;
     private int rockCount = 0;
 
     // Number of organisms of each type currently on grid
-    private int plantPop = 0;
+    private int bushPop = 0;
+    private int grassPop = 0;
     private int herbivorePop = 0;
     private int carnivorePop = 0;
 
@@ -42,7 +45,8 @@ public class Earth {
 
         carnivoreList = new ArrayList<Carnivore>();
         herbivoreList = new ArrayList<Herbivore>();
-        plantList = new ArrayList<Plant>();
+        bushList = new ArrayList<Bush>();
+        grassList = new ArrayList<Grass>();
         rockList = new ArrayList<Rock>();
 
         // set plant cycle
@@ -68,14 +72,21 @@ public class Earth {
                     addEntity(newHerbivore);
                     changeHerbivorePopulation(1);
                 }
-                else if (randomDecimal < 0.38) {
-                    incrementPlantCount();
-                    int newID = getPlantCount();
-                    Plant newPlant = new Plant(newID, j,i, this);
-                    addEntity(newPlant);
-                    changePlantPopulation(1);
+                else if (randomDecimal < 0.28) {
+                    incrementGrassCount();
+                    int newID = getGrassCount();
+                    Grass newGrass = new Grass(newID, j,i, this);
+                    addEntity(newGrass);
+                    changeGrassPopulation(1);
                 }
-                else if (randomDecimal < 0.48){
+                else if (randomDecimal < 0.36) {
+                    incrementBushCount();
+                    int newID = getBushCount();
+                    Bush newBush = new Bush(newID, j,i, this);
+                    addEntity(newBush);
+                    changeBushPopulation(1);
+                }
+                else if (randomDecimal < 0.51){
                     incrementRockCount();
                     int newID = getRockCount();
                     Rock newRock = new Rock(newID, j, i, this);
@@ -102,40 +113,54 @@ public class Earth {
         ArrayList<Herbivore> tempHerbivoreList = new ArrayList<Herbivore>();
         for(Herbivore herbivore:herbivoreList)
             tempHerbivoreList.add(herbivore);
-        ArrayList<Plant> tempPlantList = new ArrayList<Plant>();
-        for(Plant plant:plantList)
-            tempPlantList.add(plant);
+        ArrayList<Bush> tempBushList = new ArrayList<Bush>();
+        for(Bush bush:bushList)
+            tempBushList.add(bush);
+        ArrayList<Grass> tempGrassList = new ArrayList<Grass>();
+        for(Grass grass:grassList)
+            tempGrassList.add(grass);
         for(Carnivore carnivore:tempCarnivoreList)
             carnivore.update();
         for(Herbivore herbivore:tempHerbivoreList)
             herbivore.update();
-        for(Plant plant:tempPlantList)
-            plant.update();
+        for(Bush bush:tempBushList)
+            bush.update();
+        for(Grass grass:tempGrassList)
+            grass.update();
 
     }
 
     // plants new plants at random locations
     public void plantRandomly() {
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 double randomDecimal = Math.random();
                 // plant new plants
                 if (isEmpty(j,i)) {
-                    if(randomDecimal > 0.95) {
-                        incrementPlantCount();
-                        int newID = getPlantCount();
-                        Plant newPlant = new Plant(newID, j,i, this);
-                        addEntity(newPlant);
-                        changePlantPopulation(1);
+                    if(randomDecimal < 0.25) {
+                        incrementBushCount();
+                        int newID = getBushCount();
+                        Bush newBush = new Bush(newID, j,i, this);
+                        addEntity(newBush);
+                        changeBushPopulation(1);
+                    }
+                    else if (randomDecimal < 0.60) {
+                        incrementGrassCount();
+                        int newID = getGrassCount();
+                        Grass newGrass = new Grass(newID, j,i, this);
+                        addEntity(newGrass);
+                        changeGrassPopulation(1);
                     }
                 }
             }
         }
+
         // reset time passed since last plant cycle to 0
         timePassedSincePlantCycle = 0;
-        // set the new plant cycle to a random number between 3 and 5 (inclusive)
+        // set the new plant cycle to a random number between 3 and 5
         Random rn = new Random();
-        int randomNum =  rn.nextInt(3) + 2;
+        int randomNum =  rn.nextInt(3) + 3;
         nextPlantCycle = randomNum;
     }
 
@@ -239,16 +264,29 @@ public class Earth {
         }
     }
 
-    protected void addEntity(Plant n){
+    protected void addEntity(Bush n){
         int X = n.getX();
         int Y = n.getY();
 
         if (isEmpty(X,Y)) {
             grid[Y][X] = n; //grid[row][col]
-            plantList.add(n);
+            bushList.add(n);
         }
         else{
-            System.out.printf("plant: location %d,%d is not empty%n", X, Y);
+            System.out.printf("bush: location %d,%d is not empty%n", X, Y);
+        }
+    }
+
+    protected void addEntity(Grass n){
+        int X = n.getX();
+        int Y = n.getY();
+
+        if (isEmpty(X,Y)) {
+            grid[Y][X] = n; //grid[row][col]
+            grassList.add(n);
+        }
+        else{
+            System.out.printf("grass: location %d,%d is not empty%n", X, Y);
         }
     }
 
@@ -284,8 +322,10 @@ public class Earth {
     protected void removeEntity(Entity entity){
         grid[entity.getY()][entity.getX()] = null;
         entity.setStatus(false);
-        if (entity instanceof Plant)
-            plantList.remove(entity);
+        if (entity instanceof Bush)
+            bushList.remove(entity);
+        else if (entity instanceof Grass)
+            grassList.remove(entity);
         else if (entity instanceof Herbivore)
             herbivoreList.remove(entity);
         else if (entity instanceof Carnivore)
@@ -309,14 +349,16 @@ public class Earth {
     }
 
     // Method that represents each entity as a symbol on the grid
-    private static String symbol(Entity n){
-        if (n instanceof Carnivore){
+    private static String symbol(Entity entity) {
+        if (entity instanceof Carnivore) {
             return "@";
-        } else if (n instanceof Herbivore){
+        } else if (entity instanceof Herbivore) {
             return "&";
-        } else if(n instanceof Plant) {
+        } else if (entity instanceof Bush) {
             return "*";
-        } else if (n instanceof Rock) {
+        } else if (entity instanceof Grass){
+            return "^";
+        }else if (entity instanceof Rock) {
             return "#";
         }
         else return ".";
@@ -344,9 +386,11 @@ public class Earth {
     }
 
     // changePlantPopulation: gives current number of plants on grid
-    public void changePlantPopulation(int change){
-        plantPop+=change;
+    public void changeBushPopulation(int change){
+        bushPop+=change;
     }
+
+    public void changeGrassPopulation(int change) { grassPop+=change; }
 
     // changeHerbivorePopulation: gives current number of herbivores on grid
     public void changeHerbivorePopulation(int change){
@@ -359,13 +403,15 @@ public class Earth {
     }
 
     // increment methods for organism counts
-    public void incrementPlantCount(){ plantCount++; }
+    public void incrementBushCount(){ bushCount++; }
+    public void incrementGrassCount(){ grassCount++; }
     public void incrementHerbivoreCount(){ herbivoreCount++; }
     public void incrementCarnivoreCount(){ carnivoreCount++; }
     public void incrementRockCount(){rockCount++;}
 
     // get methods for organism counts
-    public int getPlantCount(){ return plantCount; }
+    public int getBushCount(){ return bushCount; }
+    public int getGrassCount(){ return grassCount; }
     public int getHerbivoreCount() { return herbivoreCount; }
     public int getCarnivoreCount() { return carnivoreCount; }
     public int getRockCount(){return rockCount;}
@@ -373,7 +419,8 @@ public class Earth {
     // Get methods for entity lists
     public ArrayList<Carnivore> getCarnivoreList(){return carnivoreList;}
     public ArrayList<Herbivore> getHerbivoreList(){return herbivoreList;}
-    public ArrayList<Plant> getPlantList() {return plantList;}
+    public ArrayList<Bush> getBushList() {return bushList;}
+    public ArrayList<Grass> getGrassList() {return grassList;}
 
     public boolean isSpaceAvailable(Entity entity){
         //checks whether there is empty space around the entity

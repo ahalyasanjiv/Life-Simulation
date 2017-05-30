@@ -43,7 +43,7 @@ public class Herbivore extends Animal {
             home.removeEntity(this);
             //System.out.println("herbID " + getID() + " died");
         }
-        else if (getAge()>=getBirthAge() && getEnergy()>=getBirthEnergy() && randomDecimal > 0.60 && home.isSpaceAvailable(this) && getNumberOfBirths()<7)
+        else if (getAge()>=getBirthAge() && getEnergy()>=getBirthEnergy() && randomDecimal > 0.70 && home.isSpaceAvailable(this) && getNumberOfBirths()<7)
             giveBirth();
         else if (getEnergy()<getMaxEnergy() && home.isFoodInImmediateRadius(this)&&(getAge() % getCooldown() == 0)) {
             eatFood();

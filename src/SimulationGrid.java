@@ -81,9 +81,14 @@ public class SimulationGrid extends JFrame{
                         newLabel.setText("&");
                         newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
                         grid.add(newLabel);
-                    } else if (entity instanceof Plant) {
+                    } else if (entity instanceof Bush) {
                         JLabel newLabel = new JLabel();
                         newLabel.setText("*");
+                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                        grid.add(newLabel);
+                    } else if (entity instanceof Grass) {
+                        JLabel newLabel = new JLabel();
+                        newLabel.setText("\"");
                         newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
                         grid.add(newLabel);
                     } else if (entity instanceof Rock) {

@@ -3,7 +3,7 @@
  */
 import java.util.Random;
 
-public class Plant extends Entity {
+abstract public class Plant extends Entity {
     public Plant(int ID, int X, int Y, Earth home){
         super(ID, X, Y, randPlantMaxAge(), home);
     }
