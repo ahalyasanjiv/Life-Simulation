@@ -41,6 +41,7 @@ public class LifeFrame extends JFrame{
         cautionLabel.setText("<html> <center><p style=\"font-size:16px\"><b>WELCOME TO LIFE SIMULATION!!! </b></p>" +
                 "* is a plant, & is a herbivore, @ is a carnivore, and # is a rock. <br>"+
                 "<p style=\"font-size:8px\"><i>CAUTION: Choosing dimensions too big may cause the grid to be cut off</i></p><center></html>");
+        //cautionLabel.setFont(new Font("Comic Sans MS", Font.PLAIN,12));
 
         add(textFields,BorderLayout.CENTER);
         submitButton = new JButton("I'm ready to ROLL");

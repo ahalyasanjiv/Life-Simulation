@@ -50,22 +50,36 @@ public class SimulationGrid extends JFrame{
         grid.setLayout(new GridLayout(rows,cols,0,0));
         Entity[][] currentGrid = earth.getGrid();
 
-        int fontsizeINT =  Math.min(rows,cols) * 50 /30;
-        if (fontsizeINT < 12) {fontsizeINT = 12;}
-        String fontsize =  Integer.toString(fontsizeINT);
+        int fontSize =  Math.min(rows,cols) * 50 /30;
+        if (fontSize < 16) {fontSize = 16;}
 
         for (Entity[] row : currentGrid){
             for(Entity entity: row){
                 if (entity instanceof Carnivore){
-                    grid.add(new JLabel("<html><p style=\"font-size:"+ fontsize +"px\">@</p></html>"));
+                    JLabel newLabel = new JLabel();
+                    newLabel.setText("@");
+                    newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                    grid.add(newLabel);
                 } else if (entity instanceof Herbivore){
-                    grid.add(new JLabel("<html><p style=\"font-size:"+ fontsize +"px\">&</p></html>"));
+                    JLabel newLabel = new JLabel();
+                    newLabel.setText("&");
+                    newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                    grid.add(newLabel);
                 } else if (entity instanceof Plant){
-                    grid.add(new JLabel("<html><p style=\"font-size:"+ fontsize +"px\">*</p></html>"));
+                    JLabel newLabel = new JLabel();
+                    newLabel.setText("*");
+                    newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                    grid.add(newLabel);
                 } else if (entity instanceof Rock){
-                    grid.add(new JLabel("<html><p style=\"font-size:"+ fontsize +"px\">#</p></html>"));
+                    JLabel newLabel = new JLabel();
+                    newLabel.setText("#");
+                    newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                    grid.add(newLabel);
                 } else if (entity == null){
-                    grid.add(new JLabel("<html><p style=\"font-size:"+ fontsize +"px\">.</p></html>"));
+                    JLabel newLabel = new JLabel();
+                    newLabel.setText(".");
+                    newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+                    grid.add(newLabel);
                 }
             }
         }
