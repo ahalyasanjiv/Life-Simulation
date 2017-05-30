@@ -400,4 +400,8 @@ public class Earth {
         }
         return false;
     }
+
+    public Entity[][] getGrid(){
+        return grid;
+    }
 }

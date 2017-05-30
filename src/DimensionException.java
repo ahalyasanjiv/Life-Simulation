@@ -2,7 +2,7 @@
  * DimensionException is a type of Exception that catches invalid dimension sizes.
  */
 
-public class DimensionException extends Exception {
+public class DimensionException extends RuntimeException {
     private String message;
 
     public DimensionException() {
