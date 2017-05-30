@@ -13,16 +13,49 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 
+/**
+ * The LifeFrame class provides the GUI for getting the number of rows, columns, and iterations from the user.
+ */
 public class LifeFrame extends JFrame{
+    /**
+     * JTextField for inputting the number of rows.
+     */
     private final JTextField rowField;
+
+    /**
+     * JTextField for inputting the number of columns.
+     */
     private final JTextField colField;
+
+    /**
+     * JTextField for inputting the number of iterations.
+     */
     private final JTextField iterationField;
+
+    /**
+     * JButton for submitting all inputs. Take note that pressing "Enter" also works.
+     */
     private final JButton submitButton;
+
+    /**
+     * JPanel for holding the rowField, colField, and iterationField JTextFields, and also the outputList JComboBox.
+     */
     private final JPanel textFields;
+
+    /**
+     * JComboBox for the different output styles:
+     * 0. Display in new window and terminal
+     * 1. Display in new window only
+     * 2. Display in terminal only
+     */
     private final JComboBox<String> outputList;
+
     private final String[] outputOptions = {"Display in new window and terminal",
             "Display in new window only", "Display in terminal only"};
 
+    /**
+     * Constructor for LifeFrame.
+     */
     public LifeFrame(){
         super("Life Simulation");
 
@@ -73,7 +106,18 @@ public class LifeFrame extends JFrame{
         submitButton.addActionListener(handler);
     }
 
+    /**
+     * The ButtonHandler private class is an inner class under LifeFrame. It is a handler for taking user inputs.
+     */
     private class ButtonHandler implements ActionListener{
+        /**
+         * Overriden method for the handler. Takes user inputs and makes a SimulationFrame frame or prints the output to terminal
+         * according to user choice.
+         * @param event
+         * @throws DimensionException Thrown when row or column input is <= 0
+         * @throws IterationException Thrown when iteration input is <= 0
+         * @throws NumberFormatException Thrown when the inputs are not integers
+         */
         @Override
         public void actionPerformed(ActionEvent event) throws DimensionException, IterationException, NumberFormatException{
             try{
@@ -89,7 +133,7 @@ public class LifeFrame extends JFrame{
                 int outputSel = outputList.getSelectedIndex();
 
                 //System.out.print(outputSel);
-                SimulationGrid window = new SimulationGrid(row,col,iterations, outputSel);
+                SimulationFrame window = new SimulationFrame(row,col,iterations, outputSel);
                 if (outputSel !=2) { //if only terminal output
                     window.setSize(col * 60, row * 60);
                 } else {

@@ -13,20 +13,72 @@ import javax.swing.JLabel;
 import javax.swing.border.Border;
 import javax.swing.Timer;
 
-public class SimulationGrid extends JFrame{
+/**
+ * The SimulationFrame class provides the GUI for the simulation.
+ */
+public class SimulationFrame extends JFrame{
+    /**
+     * Earth object used for simulation.
+     */
     private Earth earth;
+
+    /**
+     * JLabel for displaying the current turn, or when window display is turned off, simulation status of the terminal is shown.
+     */
     private JLabel turn;
+
+    /**
+     * JPanel for holding the grid.
+     */
     private JPanel grid;
+
+    /**
+     * Used for storing the current turn.
+     */
     private int turnNum=0;
+
+    /**
+     * ActionListener for updating the grid and turn number. Used with a timer to update every 500 milliseconds
+     */
     private Updater updater = new Updater();
+
+    /**
+     * Timer for scheduling updates every 500 milliseconds.
+     */
     private Timer timer  = new Timer(500, updater);
 
+    /**
+     * Stores the number of rows in the simulation.
+     */
     private int rows;
+
+    /**
+     * Stores the number of columns in the simulation.
+     */
     private int cols;
+
+    /**
+     * Stores the numbers of iterations in the simulation.
+     */
     private int iterations;
+
+    /**
+     * Stores the output style retrieve from the outputList in LifeFrame class.
+     * 0. Display in new window and terminal
+     * 1. Display in new window only
+     * 2. Display in terminal only
+     */
     private int outputStyle;
 
-    public SimulationGrid(int rows, int cols, int iterations, int outputStyle){
+    /**
+     * Constructor for the SimulationFrame.
+     *
+     * @param rows Number of rows retrieved from user
+     * @param cols Number of columns retrieved from user
+     * @param iterations Number of iterations retrieved from user
+     * @param outputStyle Retrieved from JComboBox outputList
+     */
+    public SimulationFrame(int rows, int cols, int iterations, int outputStyle){
         super("Life Simulation");
 
         this.rows = rows;
@@ -52,6 +104,10 @@ public class SimulationGrid extends JFrame{
 
     }
 
+    /**
+     * Method for updating the grid. If only window output is selected, the method will only display the output to a new SimulationFrame.
+     * If only terminal output is selected, the SimulationFrame will display text regarding the status of the simulation.
+     */
     private void updateGrid(){
         Entity[][] currentGrid = earth.getGrid();
 
@@ -108,7 +164,16 @@ public class SimulationGrid extends JFrame{
         }
     }
 
+    /**
+     * The Updater private class is an inner class under SimulationFrame. It is used to refresh the components in the frame
+     * so that the updates display.
+     */
     private class Updater implements ActionListener{
+        /**
+         * Overriden method for the handler. It updates the earth and increments turn,
+         * and displays to terminal/SimulationFrame accordingly.
+         * @param event
+         */
         @Override
         public void actionPerformed(ActionEvent event) {
             turnNum++;
