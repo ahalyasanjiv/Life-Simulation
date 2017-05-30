@@ -71,48 +71,5 @@ public abstract class Animal extends Entity {
     public void setCooldown(int cooldown){this.cooldown = cooldown;}
 
 
-     /*
-    @Override
-    public void lookForFood(){
-        int[] newLoc;
-        int[][] surrounding = home.getSurroundCoords(this);
-        boolean foundFood = false;
-        // Keep looking at random locations surrounding animal until place to move to is found
-
-        while (!foundFood) {
-
-            Random rand = new Random();
-            int randLoc = rand.nextInt(8);
-            newLoc = surrounding[randLoc];
-            if (home.isValidCoordinate(newLoc[0],newLoc[1])) {
-                if (home.isPlant(newLoc[0],newLoc[1])) {
-                    //if (randLoc < 8) { //if the location is within the inner surrounding coordinates, eat the food
-                        home.removeEntity(home.getEntity(newLoc[0], newLoc[1]));
-                        home.moveEntity(this, newLoc[0], newLoc[1]);
-                        increaseEnergy(3);
-                        foundFood = true;
-                    //}
-
-                    else { //else the food is on the outer coordinates; move towards the food but don't eat it because the food is too far
-                        int x = newLoc[0];
-                        int y = newLoc[1];
-
-                        if (x < this.getX()){x++;} //if food is two spaces left of the animal
-                        else if(x > this.getX()) x--; //else if the food is two spaces to the right
-
-                        if (y < this.getY() ){y++;}
-                        else if (y > this.getY()) y--;
-
-                        if (home.isEmpty(x,y)) {home.moveEntity(this, x, y);}
-                        else move(); //move normally if animal cannot move towards food
-                        foundFood = true;
-                    }
-
-                }
-            }
-        }
-    }
-    */
-
 
 }

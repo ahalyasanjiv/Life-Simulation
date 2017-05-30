@@ -22,7 +22,7 @@ public class Carnivore extends Animal {
 
     private static int randMaxEnergy(){
         Random rand = new Random();
-        return rand.nextInt(5) + 5; // 5-9
+        return rand.nextInt(3) + 5; // 5-7
     }
 
     private static int randBirthAge(){
@@ -39,11 +39,11 @@ public class Carnivore extends Animal {
     public void update() {
         increaseAge();
         double randomDecimal = Math.random();
-        if ((getAge() > getMaxAge() || getEnergy() < getMinEnergy()) && randomDecimal < 0.1)
+        if ((getAge() > getMaxAge() || getEnergy() < getMinEnergy()) && randomDecimal < 0.05)
             home.removeEntity(this);
         else if (getAge()>getBirthAge() && getEnergy()>getBirthEnergy() && home.isSpaceAvailable(this) && getNumberOfBirths()<4)
             giveBirth();
-        else if (getEnergy()<getMaxEnergy() && home.isFoodInImmediateRadius(this) && (getAge() % getCooldown() == 0) && randomDecimal < 0.5) {
+        else if (getEnergy()<getMaxEnergy() && home.isFoodInImmediateRadius(this) && (getAge() % getCooldown() == 0) && randomDecimal < 0.51) {
             eatFood();
             resetCooldown();
         }
