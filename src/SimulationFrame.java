@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.border.Border;
 import javax.swing.Timer;
+import javax.swing.plaf.ColorUIResource;
 
 /**
  * The SimulationFrame class provides the GUI for the simulation.
@@ -128,40 +129,35 @@ public class SimulationFrame extends JFrame{
             for (Entity[] row : currentGrid) {
                 for (Entity entity : row) {
                     if (entity instanceof Carnivore) {
-                        JLabel newLabel = new JLabel();
-                        newLabel.setText("@");
-                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                        grid.add(newLabel);
+                        addSymbol("@", fontSize, new Color(255, 51, 0));
                     } else if (entity instanceof Herbivore) {
-                        JLabel newLabel = new JLabel();
-                        newLabel.setText("&");
-                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                        grid.add(newLabel);
+                        addSymbol("&", fontSize, new Color(51, 153, 255));
                     } else if (entity instanceof Bush) {
-                        JLabel newLabel = new JLabel();
-                        newLabel.setText("*");
-                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                        grid.add(newLabel);
+                        addSymbol("*", fontSize, new Color(0, 153, 51));
                     } else if (entity instanceof Grass) {
-                        JLabel newLabel = new JLabel();
-                        newLabel.setText("\"");
-                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                        grid.add(newLabel);
+                        addSymbol("\"", fontSize, new Color(102, 255, 51));
                     } else if (entity instanceof Rock) {
-                        JLabel newLabel = new JLabel();
-                        newLabel.setText("#");
-                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                        grid.add(newLabel);
+                        addSymbol("#", fontSize, Color.GRAY);
                     } else if (entity == null) {
-                        JLabel newLabel = new JLabel();
-                        newLabel.setText(".");
-                        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
-                        grid.add(newLabel);
+                        addSymbol(".", fontSize, Color.BLACK);
                     }
                 }
             }
             add(grid, BorderLayout.CENTER);
         }
+    }
+
+    /**
+     * Adds a symbol to the grid in the frame.
+     * @param symbol Corresponding symbol to add to the grid
+     * @param fontSize Size of the symbol in the frame
+     */
+    private void addSymbol(String symbol, int fontSize, Color color){
+        JLabel newLabel = new JLabel();
+        newLabel.setText(symbol);
+        newLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+        newLabel.setForeground(color);
+        grid.add(newLabel);
     }
 
     /**
