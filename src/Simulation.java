@@ -1,3 +1,5 @@
+/** Tsz Yan Jamie Fung and Ahalya Sanjiv CSC 221 Final Group Project */
+
 /**
  * Simulation is the driver class that tests the Earth.
  * Size of dimensions for the grid and number of iterations are taken from the user input.

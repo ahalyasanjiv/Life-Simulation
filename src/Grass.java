@@ -1,3 +1,5 @@
+/* Tsz Yan Jamie Fung and Ahalya Sanjiv Final Group Project */
+
 /**
  * Represents grass, a species of plant.
  */

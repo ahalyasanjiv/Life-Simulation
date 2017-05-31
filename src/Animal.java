@@ -1,6 +1,5 @@
-/**
- * Created by ahalyasanjiv on 5/16/17.
- */
+/* Tsz Yan Jamie Fung and Ahalya Sanjiv Final Group Project */
+
 import java.util.Random;
 
 /**

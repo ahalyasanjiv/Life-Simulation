@@ -1,3 +1,5 @@
+/* Tsz Yan Jamie Fung and Ahalya Sanjiv Final Group Project */
+
 /**
  * Represents an entity on the grid.
  */

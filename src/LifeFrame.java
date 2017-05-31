@@ -1,6 +1,4 @@
-/**
- * Created by macaron on 5/29/17.
- */
+/* Tsz Yan Jamie Fung and Ahalya Sanjiv Final Group Project */
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -89,7 +87,7 @@ public class LifeFrame extends JFrame{
         JLabel cautionLabel = new JLabel();
         cautionLabel.setText("<html> <center><p style=\"font-size:16px\"><b>WELCOME TO LIFE SIMULATION!!! </b></p>" +
                 "* is a bush, \" is grass, & is a herbivore, @ is a carnivore, and # is a rock. <br>"+
-                "<p style=\"font-size:8px\"><i>CAUTION: Choosing dimensions too big may cause the grid to be cut off.</i></p><center></html>");
+                "<p style=\"font-size:10px\"><i><b>CAUTION:</b> Choosing dimensions too big may cause the grid to be cut off.</i></p><center></html>");
         //cautionLabel.setFont(new Font("Comic Sans MS", Font.PLAIN,12));
 
         //ADDING EVERYTHING TO THE JFRAME

@@ -1,3 +1,5 @@
+/* Tsz Yan Jamie Fung and Ahalya Sanjiv Final Group Project */
+
 /**
  * DimensionException is a type of Exception that catches invalid dimension sizes.
  */
