@@ -446,7 +446,7 @@ public class Earth {
         } else if (entity instanceof Bush) {
             return "*";
         } else if (entity instanceof Grass){
-            return "^";
+            return "\"";
         }else if (entity instanceof Rock) {
             return "#";
         }
