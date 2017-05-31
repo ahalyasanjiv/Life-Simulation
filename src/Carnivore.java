@@ -1,40 +1,74 @@
-/**
- * Created by ahalyasanjiv on 5/16/17.
- */
 import java.util.Random;
 
+/**
+ * Represents a carnivore. Carnivores eat Herbivores. They move every 1 to 2 turns. Their lifespan is around 14-19 years.
+ */
 public class Carnivore extends Animal {
+    /**
+     * Records the number of births the carnivore has had so far.
+     */
     public int numberOfBirths = 0;
 
+    /**
+     * Constructor for carnivore.
+     * @param ID ID of carnivore.
+     * @param X X coordinate of carnivore's location.
+     * @param Y Y coordinate of carnivore's location.
+     * @param home Earth on which carnivore resides.
+     */
     public Carnivore(int ID, int X, int Y, Earth home){
         super(ID, X, Y, randMaxAge(), randCooldown(), randMaxEnergy(), randBirthAge(), randBirthEnergy(), home);
     }
 
+    /**
+     * Generates a random maximum age for carnivore.
+     * @return Random maximum age for carnivore.
+     */
     private static int randMaxAge(){
         Random rand = new Random();
         return rand.nextInt(6) + 14; // 14-19;
     }
 
+    /**
+     * Generates a random cooldown for carnivore. This represents the number of cycles between moves.
+     * @return Random cooldown for carnivore.
+     */
     private static int randCooldown(){
         Random rand = new Random();
         return rand.nextInt(3) + 1; // 1-2
     }
 
+    /**
+     * Generates a random maximum energy that is sufficient for a carnivore to not need to eat.
+     * @return Random maximum energy that is sufficient for a carnivore to not need to eat.
+     */
     private static int randMaxEnergy(){
         Random rand = new Random();
         return rand.nextInt(3) + 5; // 5-7
     }
 
+    /**
+     * Generates a random minimum age for a carnivore to give birth.
+     * @return Random minimum age for a carnivore to give birth.
+     */
     private static int randBirthAge(){
         Random rand = new Random();
         return rand.nextInt(3) + 5; // 5-7
     }
 
+    /**
+     * Generates a random minimum energy required for a carnivore to give birth.
+     * @return Random minimum energy required for a carnivore to give birth.
+     */
     private static int randBirthEnergy(){
         Random rand = new Random();
         return rand.nextInt(3) + 2; // 4 - 7
     }
 
+    /**
+     * Updates the current state of the carnivore. During this update, the carnivore may
+     * give birth, eat, move closer to food, simply move (not necessarily towards food), or die.
+     */
     @Override
     public void update() {
         increaseAge();
@@ -63,6 +97,9 @@ public class Carnivore extends Animal {
         //System.out.println("carnivoreID: " + getID()+ " X:" + getX() + " Y:" + getY());
     }
 
+    /**
+     * Carnivore eats food that is one space away from it. The carnivore will take the spot of the food and the food will die.
+     */
     @Override
     public void eatFood() {
         int[] newLocation;
@@ -73,6 +110,9 @@ public class Carnivore extends Animal {
         //System.out.println("carnID: "+getID()+" ate");
     }
 
+    /**
+     * Carnivore moves closer towards food in its outer radius. The carnivore is able to see six spaces away from itself.
+     */
     @Override
     public void moveTowardsFood() {
         int[][] surrounding = home.getImmediateCoordinates(this);
@@ -89,7 +129,9 @@ public class Carnivore extends Animal {
         }
     }
 
-
+    /**
+     * Carnivore gives birth to another carnivore. The new carnivore will be located near to the carnivore that gave birth.
+     */
     @Override
     public void giveBirth() {
         if (home.isSpaceAvailable(this)) {
@@ -117,14 +159,24 @@ public class Carnivore extends Animal {
         }
     }
 
+    /**
+     * Increases the number of births for the carnivore.
+     */
     public void increaseNumberOfBirths() {
         numberOfBirths++;
     }
 
+    /**
+     * Gets the number of births the carnivore has had so far.
+     * @return The number of births the carnivore has had so far.
+     */
     public int getNumberOfBirths() {
         return numberOfBirths;
     }
 
+    /**
+     * Resets the cooldown (which determines the number of cycles between moves).
+     */
     public void resetCooldown() {
         super.setCooldown(randCooldown());
     }

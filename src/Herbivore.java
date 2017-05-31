@@ -1,40 +1,74 @@
-/**
- * Created by ahalyasanjiv on 5/16/17.
- */
 import java.util.Random;
 
+/**
+ * Represents a herbivore. Herbivore eat plants. They move every 1 to 3 turns. Their lifespan is around 12-17 years.
+ */
 public class Herbivore extends Animal {
+    /**
+     * Records the number of births the herbivore has had so far.
+     */
     public int numberOfBirths = 0;
 
+    /**
+     * Constructor for herbivore.
+     * @param ID ID of herbivore.
+     * @param X X coordinate of herbivore's location.
+     * @param Y Y coordinate of herbivore's location.
+     * @param home Earth on which herbivore resides.
+     */
     public Herbivore(int ID, int X, int Y, Earth home){
         super(ID, X, Y, randMaxAge(), randCooldown(), randMaxEnergy(), randBirthAge(), randBirthEnergy(),home);
     }
 
+    /**
+     * Generates a random maximum age for herbivore.
+     * @return Random maximum age for herbivore.
+     */
     private static int randMaxAge(){
         Random rand = new Random();
         return rand.nextInt(6) + 11; // 12-17;
     }
 
+    /**
+     * Generates a random cooldown for herbivore. This represents the number of cycles between moves.
+     * @return Random cooldown for herbivore.
+     */
     private static int randCooldown() {
         Random rand = new Random();
         return rand.nextInt(4) + 1; // 1-3;
     }
 
+    /**
+     * Generates a random maximum energy that is sufficient for a herbivore to not need to eat.
+     * @return Random maximum energy that is sufficient for a herbivore to not need to eat.
+     */
     private static int randMaxEnergy(){
         Random rand = new Random();
         return rand.nextInt(5) + 5; // 5-9
     }
 
+    /**
+     * Generates a random minimum age for a herbivore to give birth.
+     * @return Random minimum age for a herbivore to give birth.
+     */
     private static int randBirthAge(){
         Random rand = new Random();
         return rand.nextInt(3) + 3; // 3 - 5
     }
 
+    /**
+     * Generates a random minimum energy required for a herbivore to give birth.
+     * @return Random minimum energy required for a herbivore to give birth.
+     */
     private static int randBirthEnergy(){
         Random rand = new Random();
         return rand.nextInt(4) + 3; // 4 - 7
     }
 
+    /**
+     * Updates the current state of the herbivore. During this update, the herbivore may
+     * give birth, eat, move closer to food, simply move (not necessarily towards food), or die.
+     */
     @Override
     public void update() {
         increaseAge();
@@ -67,6 +101,9 @@ public class Herbivore extends Animal {
         //System.out.println("herbID:" + getID()+ " X:" + getX() + " Y:" + getY());
     }
 
+    /**
+     * Herbivore eats food that is one space away from it. The herbivore will take the spot of the food and the food will die.
+     */
     @Override
     public void eatFood() {
         int[] newLocation;
@@ -76,6 +113,9 @@ public class Herbivore extends Animal {
         increaseEnergy(4);
     }
 
+    /**
+     * Herbivore moves closer towards food in its outer radius. The herbivore is able to see six spaces away from itself.
+     */
     @Override
     public void moveTowardsFood() {
         int[][] surrounding = home.getImmediateCoordinates(this);
@@ -91,6 +131,9 @@ public class Herbivore extends Animal {
         }
     }
 
+    /**
+     * Herbivore gives birth to another herbivore. The new herbivore will be located near to the herbivore that gave birth.
+     */
     @Override
     public void giveBirth() {
         int[] birthLoc;
@@ -116,17 +159,27 @@ public class Herbivore extends Animal {
         }
 
     }
-
+    /**
+     * Increases the number of births for the herbivore.
+     */
     public void increaseNumberOfBirths() {
         numberOfBirths++;
     }
 
+    /**
+     * Gets the number of births the herbivore has had so far.
+     * @return The number of births the herbivore has had so far.
+     */
     public int getNumberOfBirths() {
         return numberOfBirths;
     }
 
+    /**
+     * Resets the cooldown (which determines the number of cycles between moves).
+     */
     public void resetCooldown() {
         super.setCooldown(randCooldown());
     }
+
 }
 
