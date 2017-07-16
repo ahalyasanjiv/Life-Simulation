@@ -1,5 +1,3 @@
-/* Tsz Yan Jamie Fung and Ahalya Sanjiv Final Group Project */
-
 /**
  * Abstract class that represents a plant. Plants grow randomly and have a lifespan of around 20-25.
  */

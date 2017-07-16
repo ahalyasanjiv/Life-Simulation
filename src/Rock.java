@@ -1,5 +1,3 @@
-/* Tsz Yan Jamie Fung and Ahalya Sanjiv Final Group Project */
-
 /**
  * Represents a rock.
  * A rock cannot move from its position.

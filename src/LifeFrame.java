@@ -1,5 +1,3 @@
-/* Tsz Yan Jamie Fung and Ahalya Sanjiv Final Group Project */
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

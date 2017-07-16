@@ -1,5 +1,3 @@
-/* Tsz Yan Jamie Fung and Ahalya Sanjiv Final Group Project */
-
 import java.util.ArrayList;
 import java.util.Random;
 /**
